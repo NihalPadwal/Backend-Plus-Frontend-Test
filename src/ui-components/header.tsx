@@ -28,11 +28,11 @@ const Header = (props: Props) => {
 
   useEffect(() => {
     setPosition(pathname);
-  }, []);
+  }, [pathname]);
 
   function handlePageChange(e: string) {
     setPosition(e);
-    router.push(`/${e}`, { scroll: false });
+    // router.push(`/${e}`, { scroll: false });
   }
 
   return (
@@ -58,13 +58,17 @@ const Header = (props: Props) => {
             value={position}
             onValueChange={handlePageChange}
           >
-            <DropdownMenuRadioItem value="client">Client</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="server">Server</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="client">
+              <Link href={"/client"}>Client</Link>
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="server">
+              <Link href={"/server"}>Server</Link>
+            </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="protected">
-              Protected
+              <Link href={"/protected"}>Protected</Link>
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="role-based">
-              Role Based
+              <Link href={"/role-based"}>Role Based</Link>
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
