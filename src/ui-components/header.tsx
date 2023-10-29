@@ -23,7 +23,11 @@ type Props = {};
 
 const Header = (props: Props) => {
   const [position, setPosition] = useState<string>("");
-  const pathname = usePathname().split("/")[1];
+  const usePathNameObj = usePathname();
+  const pathname =
+    usePathNameObj.split("/").length > 2
+      ? usePathNameObj.split("/")[2]
+      : usePathNameObj.split("/")[1];
   const router = useRouter();
 
   useEffect(() => {
@@ -60,6 +64,12 @@ const Header = (props: Props) => {
           >
             <DropdownMenuRadioItem value="client">
               <Link href={"/client"}>Client</Link>
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="login">
+              <Link href={"/auth/login"}>Sign In</Link>
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="register">
+              <Link href={"/auth/register"}>Sign Up</Link>
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="server">
               <Link href={"/server"}>Server</Link>
