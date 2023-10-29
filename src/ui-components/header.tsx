@@ -62,24 +62,36 @@ const Header = (props: Props) => {
             value={position}
             onValueChange={handlePageChange}
           >
-            <DropdownMenuRadioItem value="client">
-              <Link href={"/client"}>Client</Link>
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="login">
-              <Link href={"/auth/login"}>Sign In</Link>
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="register">
-              <Link href={"/auth/register"}>Sign Up</Link>
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="server">
-              <Link href={"/server"}>Server</Link>
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="protected">
-              <Link href={"/protected"}>Protected</Link>
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="role-based">
-              <Link href={"/role-based"}>Role Based</Link>
-            </DropdownMenuRadioItem>
+            <Link href={"/client"}>
+              <DropdownMenuRadioItem value="client">
+                Client
+              </DropdownMenuRadioItem>
+            </Link>
+            <Link href={"/auth/login"}>
+              <DropdownMenuRadioItem value="login">
+                Sign In
+              </DropdownMenuRadioItem>
+            </Link>
+            <Link href={"/auth/register"}>
+              <DropdownMenuRadioItem value="register">
+                Sign Up
+              </DropdownMenuRadioItem>
+            </Link>
+            <Link href={"/server"}>
+              <DropdownMenuRadioItem value="server">
+                Server
+              </DropdownMenuRadioItem>
+            </Link>
+            <Link href={"/protected"}>
+              <DropdownMenuRadioItem value="protected">
+                Protected
+              </DropdownMenuRadioItem>
+            </Link>
+            <Link href={"/role-based"}>
+              <DropdownMenuRadioItem value="role-based">
+                Role Based
+              </DropdownMenuRadioItem>
+            </Link>
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
