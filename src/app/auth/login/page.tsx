@@ -1,11 +1,11 @@
-import { CardWithForm } from "@/ui-components/create-account";
+import { CardWithFormLoginAccount } from "@/ui-components/login-account";
 
 type Props = {};
 
 const Index = (props: Props) => {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <CardWithForm />
+      <CardWithFormLoginAccount />
     </main>
   );
 };
