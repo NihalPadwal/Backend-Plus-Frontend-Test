@@ -37,11 +37,14 @@ export function CardWithFormCreateAccount() {
       otp: "",
     },
   });
+  // store if loading then true
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // this function runs when any login or register form is submitted
   const onSubmit = async (data: any) => {
     if (steps.creattionOfAccount) {
       try {
+        setIsLoading(true);
         const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/register`, {
           method: "POST",
           headers: {
@@ -103,7 +106,7 @@ export function CardWithFormCreateAccount() {
           toast.error("Something went wrong!");
           throw new Error("Something went wrong!");
         }
-
+        setIsLoading(false);
         toast.success(`${emailResult.msg}`);
       } catch (error) {
         toast.error(`${error}`);
@@ -111,6 +114,7 @@ export function CardWithFormCreateAccount() {
     }
     if (steps.otpVerification.value) {
       try {
+        setIsLoading(true);
         const otp = document.querySelectorAll(".inputContainer");
 
         const tempOTPStore = Array.from(otp).map((obj) => {
@@ -149,6 +153,7 @@ export function CardWithFormCreateAccount() {
           throw new Error(`${verifyResult.error.error}`);
         }
 
+        setIsLoading(false);
         toast.success(`${verifyResult.msg}`);
         window.location.href = "/auth/login";
       } catch (error) {
@@ -276,7 +281,12 @@ export function CardWithFormCreateAccount() {
                 )}
               </div>
               <div className="pt-5">
-                <Button className="w-full">Login</Button>
+                <Button className="w-full" disabled={isLoading}>
+                  Login{" "}
+                  {isLoading && (
+                    <div className="animate-spin h-5 w-5 mr-3 border-4 rounded-full border-t-4 border-t-teal-400 ml-3"></div>
+                  )}
+                </Button>
               </div>
             </form>
           </>
@@ -294,7 +304,12 @@ export function CardWithFormCreateAccount() {
               />
             </div>
             <div className="pt-5">
-              <Button className="w-full">Submit</Button>
+              <Button className="w-full" disabled={isLoading}>
+                Submit{" "}
+                {isLoading && (
+                  <div className="animate-spin h-5 w-5 mr-3 border-4 rounded-full border-t-4 border-t-teal-400 ml-3"></div>
+                )}
+              </Button>
             </div>
           </form>
         )}
