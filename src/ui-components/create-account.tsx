@@ -26,16 +26,8 @@ export function CardWithFormCreateAccount() {
   // to store steps needed for register
   const [steps, setSteps] = useState<{
     creattionOfAccount: boolean;
-    otpVerification: {
-      value: boolean;
-      otp: String;
-    };
   }>({
     creattionOfAccount: true,
-    otpVerification: {
-      value: false,
-      otp: "",
-    },
   });
   // store if loading then true
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -65,14 +57,6 @@ export function CardWithFormCreateAccount() {
         }
 
         toast.success("Successfully Created You'r Account");
-
-        setSteps({
-          creattionOfAccount: false,
-          otpVerification: {
-            value: true,
-            otp: "",
-          },
-        });
 
         const otpRes = await fetch(
           `${process.env.NEXT_PUBLIC_API}/api/generateOTP?username=${data.Username}`
@@ -108,84 +92,21 @@ export function CardWithFormCreateAccount() {
         }
         setIsLoading(false);
         toast.success(`${emailResult.msg}`);
+        window.location.href = "/auth/verify-otp";
       } catch (error) {
-        toast.error(`${error}`);
-      }
-    }
-    if (steps.otpVerification.value) {
-      try {
-        setIsLoading(true);
-        const otp = document.querySelectorAll(".inputContainer");
-
-        const tempOTPStore = Array.from(otp).map((obj) => {
-          const inputElement = obj as HTMLInputElement; // Type assertion
-          return inputElement.value;
-        });
-
-        const tempOTP = tempOTPStore.join("");
-
-        setSteps({
-          ...steps,
-          otpVerification: {
-            value: true,
-            otp: tempOTP,
-          },
-        });
-        // toast.success("OTP Verified");
-
-        const getUserRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API}/api/user/${data.Username}`
-        );
-
-        if (!getUserRes.ok) {
-          throw new Error("Something went wrong!");
-        }
-
-        const getUserResult: { _id: String } = await getUserRes.json();
-
-        const verifyRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API}/api/verifyOTP?username=${data.Username}&code=${tempOTP}&userId=${getUserResult._id}`
-        );
-
-        const verifyResult = await verifyRes.json();
-
-        if (!verifyRes.ok) {
-          throw new Error(`${verifyResult.error.error}`);
-        }
-
         setIsLoading(false);
-        toast.success(`${verifyResult.msg}`);
-        window.location.href = "/auth/login";
-      } catch (error) {
         toast.error(`${error}`);
       }
     }
-  };
-
-  // this function runs when in OTPinput value is changed ( this is used to store otp value )
-  const onVerifyOTP = (otp: String) => {
-    setSteps({
-      ...steps,
-      otpVerification: {
-        value: true,
-        otp: otp,
-      },
-    });
   };
 
   return (
     <Card className="w-[350px] py-6">
       <CardHeader>
         {steps.creattionOfAccount && <CardTitle>Create an account</CardTitle>}
-        {steps.otpVerification.value && <CardTitle>Verify Your OTP</CardTitle>}
         {steps.creattionOfAccount && (
           <CardDescription>
             Enter your email below to create your account
-          </CardDescription>
-        )}
-        {steps.otpVerification.value && (
-          <CardDescription>
-            Enter your OTP below to verify your account
           </CardDescription>
         )}
       </CardHeader>
@@ -290,28 +211,6 @@ export function CardWithFormCreateAccount() {
               </div>
             </form>
           </>
-        )}
-        {steps.otpVerification.value && (
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex gap-2 pb-4">
-              <OTPInput
-                autoFocus
-                isNumberInput
-                length={6}
-                className="otpContainer"
-                inputClassName="inputContainer [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0"
-                onChangeOTP={(otp) => onVerifyOTP(otp)}
-              />
-            </div>
-            <div className="pt-5">
-              <Button className="w-full" disabled={isLoading}>
-                Submit{" "}
-                {isLoading && (
-                  <div className="animate-spin h-5 w-5 mr-3 border-4 rounded-full border-t-4 border-t-teal-400 ml-3"></div>
-                )}
-              </Button>
-            </div>
-          </form>
         )}
       </CardContent>
       {/* <CardFooter className="flex justify-between w-full"></CardFooter> */}
