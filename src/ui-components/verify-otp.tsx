@@ -91,6 +91,7 @@ export function CardWithFormVerifyOtp() {
 
   // this function runs when in OTPinput value is changed ( this is used to store otp value )
   const onVerifyOTP = (otp: String) => {
+    //test
     setSteps({
       otpVerification: {
         value: true,
