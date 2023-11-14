@@ -18,6 +18,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 type Props = {};
 
@@ -50,6 +55,24 @@ const Header = (props: Props) => {
           alt={`header-logo`}
         />
       </Link>
+
+      <HoverCard>
+        <HoverCardTrigger>
+          <Button
+            onClick={() => {
+              // window.location.href = `${process.env.NEXT_PUBLIC_API}`;
+              window.open(`${process.env.NEXT_PUBLIC_API}`, "_blank");
+            }}
+          >
+            Run Api
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          The api and database is in testing stage and shuts down whenever it is
+          not in use for a long time to run the API please click on above button
+          and wait for API to give Response
+        </HoverCardContent>
+      </HoverCard>
 
       <DropdownMenu onOpenChange={(e) => {}}>
         <DropdownMenuTrigger asChild>
