@@ -41,6 +41,10 @@ export function CardWithFormVerifyOtp() {
   // this function runs when any login or register form is submitted
   const onSubmit = async (data: any) => {
     try {
+      const tokenRes = await fetch("/api/getcookie");
+      const tokenResult = await tokenRes.json();
+      const token = await tokenResult.token.value;
+
       setIsLoading(true);
       const otp = document.querySelectorAll(".inputContainer");
 
@@ -60,18 +64,14 @@ export function CardWithFormVerifyOtp() {
       });
       // toast.success("OTP Verified");
 
-      const getUserRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/api/user/${data.Username}`
-      );
-
-      if (!getUserRes.ok) {
-        throw new Error("Something went wrong!");
-      }
-
-      const getUserResult: { _id: String } = await getUserRes.json();
-
       const verifyRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API}/api/verifyOTP?username=${data.Username}&code=${tempOTP}&userId=${getUserResult._id}`
+        `${process.env.NEXT_PUBLIC_API}/api/verifyOTP?code=${tempOTP}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       const verifyResult = await verifyRes.json();
@@ -82,7 +82,10 @@ export function CardWithFormVerifyOtp() {
 
       setIsLoading(false);
       toast.success(`${verifyResult.msg}`);
-      window.location.href = "/auth/login";
+
+      setTimeout(() => {
+        window.location.href = "/auth/login";
+      }, 800);
     } catch (error) {
       setIsLoading(false);
       toast.error(`${error}`);

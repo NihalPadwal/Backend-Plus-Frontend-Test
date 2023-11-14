@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+// import * as React from "react";
 import { Icons } from "@/helpers/icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,17 +14,62 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Toaster, toast } from "sonner";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 export function CardWithFormLoginAccount() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data: any) => {
-    console.log(data);
-    toast.success("Successfully Logged In");
+  // store if loading then true
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const onSubmit = async (data: any) => {
+    try {
+      setIsLoading(true);
+      const loginRes = await fetch(`${process.env.NEXT_PUBLIC_API}/api/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: `${data.Username}`,
+          password: `${data.Password}`,
+        }),
+      });
+
+      const loginResult = await loginRes.json();
+
+      if (!loginRes.ok) {
+        toast.error(loginResult.error);
+        throw new Error("Something went wrong!");
+      }
+
+      const storeCookie = await fetch("/api/setcookie", {
+        method: "POST",
+        body: JSON.stringify({ token: loginResult.token }),
+      });
+
+      if (!storeCookie.ok) {
+        toast.error("Something went wrong!");
+        throw new Error("Something went wrong!");
+      }
+
+      toast.success("Successfully Logged In");
+      setIsLoading(false);
+      reset();
+
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 400);
+    } catch (err) {
+      setIsLoading(false);
+      console.log(`${err}` || "Sorry Could'nt Log In, Something happend!");
+    }
   };
+
   return (
     <Card className="w-[350px] py-6">
       <CardHeader>
@@ -57,21 +102,17 @@ export function CardWithFormLoginAccount() {
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-2 pb-4">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              {...register("Email", {
-                required: "Email Address is required.",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Please input correct email",
-                },
+              id="username"
+              type="text"
+              placeholder="Username"
+              {...register("Username", {
+                required: "Username is required.",
               })}
             />
-            {errors.Email?.message && (
-              <p className="text-red-700 text-sm">{`${errors.Email?.message}`}</p>
+            {errors.Username?.message && (
+              <p className="text-red-700 text-sm">{`${errors.Username?.message}`}</p>
             )}
           </div>
           <div className="grid gap-2">
@@ -79,6 +120,7 @@ export function CardWithFormLoginAccount() {
             <Input
               id="password"
               type="password"
+              placeholder="Password"
               {...register("Password", {
                 required: "Password is required.",
                 minLength: {
@@ -92,7 +134,12 @@ export function CardWithFormLoginAccount() {
             )}
           </div>
           <div className="pt-5">
-            <Button className="w-full">Login</Button>
+            <Button className="w-full" disabled={isLoading}>
+              Login{" "}
+              {isLoading && (
+                <div className="animate-spin h-5 w-5 mr-3 border-4 rounded-full border-t-4 border-t-teal-400 ml-3"></div>
+              )}
+            </Button>
           </div>
         </form>
       </CardContent>

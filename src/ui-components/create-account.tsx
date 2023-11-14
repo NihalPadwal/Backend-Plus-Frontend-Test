@@ -53,13 +53,19 @@ export function CardWithFormCreateAccount() {
         const result = await res.json();
 
         if (!res.ok) {
-          throw new Error(result.error.error);
+          throw new Error("someting happend!");
         }
 
         toast.success("Successfully Created You'r Account");
 
         const otpRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API}/api/generateOTP?username=${data.Username}`
+          `${process.env.NEXT_PUBLIC_API}/api/generateOTP`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${result.token}`,
+            },
+          }
         );
 
         if (!otpRes.ok) {
@@ -84,15 +90,29 @@ export function CardWithFormCreateAccount() {
           }
         );
 
-        const emailResult = await emailRes.json();
-
         if (!emailRes.ok) {
           toast.error("Something went wrong!");
           throw new Error("Something went wrong!");
         }
+
+        const emailResult = await emailRes.json();
+
+        const storeCookie = await fetch("/api/setcookie", {
+          method: "POST",
+          body: JSON.stringify({ token: result.token }),
+        });
+
+        if (!storeCookie.ok) {
+          toast.error("Something went wrong!");
+          throw new Error("Something went wrong!");
+        }
+
         setIsLoading(false);
         toast.success(`${emailResult.msg}`);
-        window.location.href = "/auth/verify-otp";
+
+        setTimeout(() => {
+          window.location.href = "/auth/verify-otp";
+        }, 800);
       } catch (error) {
         setIsLoading(false);
         toast.error(`${error}`);
@@ -133,6 +153,7 @@ export function CardWithFormCreateAccount() {
                 </span>
               </div>
             </div>
+
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="grid gap-2 pb-4">
                 <Label htmlFor="Username">Username</Label>
