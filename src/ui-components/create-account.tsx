@@ -53,7 +53,7 @@ export function CardWithFormCreateAccount() {
         const result = await res.json();
 
         if (!res.ok) {
-          throw new Error("someting happend!");
+          throw new Error(result.error.error);
         }
 
         toast.success("Successfully Created You'r Account");
