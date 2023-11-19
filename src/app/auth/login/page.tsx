@@ -5,7 +5,7 @@ import { getProviders } from "next-auth/react";
 import { getServerSession } from "next-auth/next";
 import { CustomProviders } from "@/app/types";
 
-const getProvidersData = async (context: GetServerSidePropsContext) => {
+const getProvidersData = async () => {
   const session = await getServerSession();
 
   // If the user is already logged in, redirect.
@@ -24,8 +24,8 @@ const getProvidersData = async (context: GetServerSidePropsContext) => {
 
 type Props = {};
 
-const Index = async (context: GetServerSidePropsContext) => {
-  const providers: any = await getProvidersData(context);
+const Index = async () => {
+  const providers: any = await getProvidersData();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
