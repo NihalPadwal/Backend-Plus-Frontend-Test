@@ -16,7 +16,10 @@ import { Toaster, toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 
-export function CardWithFormLoginAccount() {
+import { signIn } from "next-auth/react";
+import { CustomProviders } from "@/app/types";
+
+export function CardWithFormLoginAccount({ providers }: CustomProviders) {
   const {
     register,
     handleSubmit,
@@ -29,47 +32,67 @@ export function CardWithFormLoginAccount() {
   const onSubmit = async (data: any) => {
     try {
       setIsLoading(true);
-      const loginRes = await fetch(`${process.env.NEXT_PUBLIC_API}/api/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: `${data.Username}`,
-          password: `${data.Password}`,
-        }),
+
+      // next-auth sign in
+      const loginRes = await signIn("Credentials", {
+        redirect: false,
+        username: data.Username,
+        password: data.Password,
       });
 
-      const loginResult = await loginRes.json();
-
-      if (!loginRes.ok) {
-        toast.error(loginResult.error);
-        throw new Error("Something went wrong!");
+      if (loginRes?.ok) {
+        alert(loginRes);
       }
 
-      const storeCookie = await fetch("/api/setcookie", {
-        method: "POST",
-        body: JSON.stringify({ token: loginResult.token }),
-      });
-
-      if (!storeCookie.ok) {
-        toast.error("Something went wrong!");
-        throw new Error("Something went wrong!");
+      if (loginRes?.error) {
+        alert("error");
       }
 
-      toast.success("Successfully Logged In");
-      setIsLoading(false);
-      reset();
+      console.log(loginRes);
 
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 400);
+      // custom sign in
+      // const loginRes = await fetch(`${process.env.NEXT_PUBLIC_API}/api/login`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     username: `${data.Username}`,
+      //     password: `${data.Password}`,
+      //   }),
+      // });
+
+      // const loginResult = await loginRes.json();
+
+      // if (!loginRes?.ok) {
+      //   toast.error(loginResult.error);
+      //   throw new Error("Something went wrong!");
+      // }
+
+      // const storeCookie = await fetch("/api/setcookie", {
+      //   method: "POST",
+      //   body: JSON.stringify({ token: loginResult.token }),
+      // });
+
+      // if (!storeCookie.ok) {
+      //   toast.error("Something went wrong!");
+      //   throw new Error("Something went wrong!");
+      // }
+
+      // toast.success("Successfully Logged In");
+      // setIsLoading(false);
+      // reset();
+
+      // setTimeout(() => {
+      //   window.location.href = "/";
+      // }, 400);
     } catch (err) {
       setIsLoading(false);
       console.log(`${err}` || "Sorry Could'nt Log In, Something happend!");
     }
   };
 
+  console.log(providers);
   return (
     <Card className="w-[350px] py-6">
       <CardHeader>
@@ -80,14 +103,24 @@ export function CardWithFormLoginAccount() {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-6">
-          <Button variant="outline">
-            <Icons.gitHub className="mr-2 h-4 w-4" />
-            Github
-          </Button>
-          <Button variant="outline">
-            <Icons.google className="mr-2 h-4 w-4" />
-            Google
-          </Button>
+          {providers &&
+            Object.values(providers).map((provider) => {
+              if (provider.name === "Credentials") {
+                return null;
+              }
+
+              const iconName = provider.id;
+              const IconSvg = Icons[iconName as string];
+
+              return (
+                <div key={iconName}>
+                  <Button variant="outline" onClick={() => signIn(iconName)}>
+                    <IconSvg className="mr-2 h-4 w-4" />
+                    {provider.name}
+                  </Button>
+                </div>
+              );
+            })}
         </div>
         <div className="relative">
           <div className="absolute inset-0 flex items-center">

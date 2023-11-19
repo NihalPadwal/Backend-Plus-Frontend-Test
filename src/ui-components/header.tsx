@@ -115,6 +115,9 @@ const Header = (props: Props) => {
                 Role Based
               </DropdownMenuRadioItem>
             </Link>
+            <Link href={"/extra"}>
+              <DropdownMenuRadioItem value="extra">Extra</DropdownMenuRadioItem>
+            </Link>
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>

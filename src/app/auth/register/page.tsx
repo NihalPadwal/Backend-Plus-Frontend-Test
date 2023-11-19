@@ -1,4 +1,8 @@
 import { CardWithFormCreateAccount } from "@/ui-components/create-account";
+import type { GetServerSidePropsContext } from "next";
+import { getProviders } from "next-auth/react";
+import { getServerSession } from "next-auth/next";
+import { CustomProviders } from "@/app/types";
 
 type Props = {};
 

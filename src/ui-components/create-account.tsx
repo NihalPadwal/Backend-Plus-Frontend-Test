@@ -16,7 +16,10 @@ import { Toaster, toast } from "sonner";
 import { useForm } from "react-hook-form";
 import OTPInput from "@/hooks/OTPInput";
 
-export function CardWithFormCreateAccount() {
+import { signIn } from "next-auth/react";
+import { CustomProviders } from "@/app/types";
+
+export function CardWithFormCreateAccount({ providers }: CustomProviders) {
   const {
     register,
     handleSubmit,
@@ -134,14 +137,27 @@ export function CardWithFormCreateAccount() {
         {steps.creattionOfAccount && (
           <>
             <div className="grid grid-cols-2 gap-6">
-              <Button variant="outline">
-                <Icons.gitHub className="mr-2 h-4 w-4" />
-                Github
-              </Button>
-              <Button variant="outline">
-                <Icons.google className="mr-2 h-4 w-4" />
-                Google
-              </Button>
+              {providers &&
+                Object.values(providers).map((provider) => {
+                  if (provider.name === "Credentials") {
+                    return null;
+                  }
+
+                  const iconName = provider.id;
+                  const IconSvg = Icons[iconName as string];
+
+                  return (
+                    <div key={iconName}>
+                      <Button
+                        variant="outline"
+                        onClick={() => signIn(iconName)}
+                      >
+                        <IconSvg className="mr-2 h-4 w-4" />
+                        {provider.name}
+                      </Button>
+                    </div>
+                  );
+                })}
             </div>
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
