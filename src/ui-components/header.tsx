@@ -125,12 +125,6 @@ const Header = (props: Props) => {
             value={position}
             onValueChange={handlePageChange}
           >
-            <Link href={"/client"}>
-              <DropdownMenuRadioItem value="client">
-                Client
-              </DropdownMenuRadioItem>
-            </Link>
-
             {!token && (
               <>
                 <Link href={"/auth/login"}>
@@ -154,24 +148,15 @@ const Header = (props: Props) => {
               </div>
             )}
 
-            <Link href={"/server"}>
-              <DropdownMenuRadioItem value="server">
-                Server
-              </DropdownMenuRadioItem>
-            </Link>
-            <Link href={"/protected"}>
-              <DropdownMenuRadioItem value="protected">
-                Protected
-              </DropdownMenuRadioItem>
-            </Link>
-            <Link href={"/role-based"}>
-              <DropdownMenuRadioItem value="role-based">
-                Role Based
-              </DropdownMenuRadioItem>
-            </Link>
-            <Link href={"/extra"}>
-              <DropdownMenuRadioItem value="extra">Extra</DropdownMenuRadioItem>
-            </Link>
+            {token === "isLoggedIn" && (
+              <>
+                <Link href={"/profile"}>
+                  <DropdownMenuRadioItem value="profile">
+                    Profile
+                  </DropdownMenuRadioItem>
+                </Link>
+              </>
+            )}
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>

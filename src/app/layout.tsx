@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <NextTopLoader color="red" />
+        <NextTopLoader color="red" crawl={false} />
         <Header />
         {children}
       </body>
