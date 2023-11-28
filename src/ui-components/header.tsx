@@ -27,6 +27,7 @@ import {
 type Props = {};
 
 const Header = (props: Props) => {
+  const [token, setToken] = useState("");
   const [position, setPosition] = useState<string>("");
   const usePathNameObj = usePathname();
   const pathname =
@@ -39,22 +40,61 @@ const Header = (props: Props) => {
     setPosition(pathname);
   }, [pathname]);
 
+  useEffect(() => {
+    async function fetchToken() {
+      try {
+        const res = await fetch("/api/getcookie");
+
+        if (!res.ok) {
+          throw Error("No token found");
+        }
+
+        setToken("isLoggedIn");
+      } catch (err) {
+        console.log(err);
+      }
+
+      // setToken(data.token.value);
+    }
+
+    fetchToken();
+  }, []);
+
   function handlePageChange(e: string) {
     setPosition(e);
     // router.push(`/${e}`, { scroll: false });
   }
 
+  async function logOut() {
+    await fetch("/api/deletecookie");
+    router.push("/auth/login");
+    setToken("");
+  }
+
   return (
     <div className="w-full flex justify-between items-center px-20 py-8">
-      <Link href={"/"}>
-        <Image
-          height={40}
-          width={40}
-          className=""
-          src="https://www.svgrepo.com/show/354113/nextjs-icon.svg"
-          alt={`header-logo`}
-        />
-      </Link>
+      {!token && (
+        <a href={"/"}>
+          <Image
+            height={40}
+            width={40}
+            className=""
+            src="https://www.svgrepo.com/show/354113/nextjs-icon.svg"
+            alt={`header-logo`}
+          />
+        </a>
+      )}
+      {token === "isLoggedIn" && (
+        <Link href={"/"}>
+          <Image
+            height={40}
+            width={40}
+            className=""
+            src="https://www.svgrepo.com/show/354113/nextjs-icon.svg"
+            alt={`header-logo`}
+          />
+        </Link>
+      )}
 
       <HoverCard>
         <HoverCardTrigger>
@@ -90,16 +130,30 @@ const Header = (props: Props) => {
                 Client
               </DropdownMenuRadioItem>
             </Link>
-            <Link href={"/auth/login"}>
-              <DropdownMenuRadioItem value="login">
-                Sign In
-              </DropdownMenuRadioItem>
-            </Link>
-            <Link href={"/auth/register"}>
-              <DropdownMenuRadioItem value="register">
-                Sign Up
-              </DropdownMenuRadioItem>
-            </Link>
+
+            {!token && (
+              <>
+                <Link href={"/auth/login"}>
+                  <DropdownMenuRadioItem value="login">
+                    Sign In
+                  </DropdownMenuRadioItem>
+                </Link>
+                <Link href={"/auth/register"}>
+                  <DropdownMenuRadioItem value="register">
+                    Sign Up
+                  </DropdownMenuRadioItem>
+                </Link>
+              </>
+            )}
+
+            {token === "isLoggedIn" && (
+              <div onClick={logOut}>
+                <DropdownMenuRadioItem value="logout">
+                  Sign Out
+                </DropdownMenuRadioItem>
+              </div>
+            )}
+
             <Link href={"/server"}>
               <DropdownMenuRadioItem value="server">
                 Server

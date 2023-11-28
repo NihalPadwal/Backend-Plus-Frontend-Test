@@ -1,5 +1,34 @@
-// Without a defined matcher, this one line applies next-auth to the entire project
-export { default } from "next-auth/middleware";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-// Applies next-auth only to mayching routes - can be regex Ref: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-export const config = { matcher: ["/server", "/client"] };
+// This function can be marked `async` if using `await` inside
+export function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+
+  const isPublicPath = path === "/auth/register" || path === "/auth/login";
+
+  const token = request.cookies.get("token")?.value || "";
+
+  if (isPublicPath && token) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  if (!isPublicPath && !token) {
+    return NextResponse.redirect(new URL("/auth/login", request.url));
+  }
+  //   return NextResponse.redirect(new URL("/home", request.url));
+}
+
+// See "Matching Paths" below to learn more
+export const config = {
+  matcher: [
+    "/",
+    "/client",
+    "/extra",
+    "/protected",
+    "/role-based",
+    "/server",
+    "/auth/login",
+    "/auth/register",
+  ],
+};

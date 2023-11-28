@@ -34,58 +34,58 @@ export function CardWithFormLoginAccount({ providers }: CustomProviders) {
       setIsLoading(true);
 
       // next-auth sign in
-      const loginRes = await signIn("Credentials", {
-        redirect: false,
-        username: data.Username,
-        password: data.Password,
-      });
+      // const loginRes = await signIn("Credentials", {
+      //   redirect: false,
+      //   username: data.Username,
+      //   password: data.Password,
+      // });
 
-      if (loginRes?.ok) {
-        alert(loginRes);
-      }
+      // if (loginRes?.ok) {
+      //   alert(loginRes);
+      // }
 
-      if (loginRes?.error) {
-        alert("error");
-      }
+      // if (loginRes?.error) {
+      //   alert("error");
+      // }
 
-      console.log(loginRes);
+      // console.log(loginRes);
 
       // custom sign in
-      // const loginRes = await fetch(`${process.env.NEXT_PUBLIC_API}/api/login`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     username: `${data.Username}`,
-      //     password: `${data.Password}`,
-      //   }),
-      // });
+      const loginRes = await fetch(`${process.env.NEXT_PUBLIC_API}/api/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: `${data.Username}`,
+          password: `${data.Password}`,
+        }),
+      });
 
-      // const loginResult = await loginRes.json();
+      const loginResult = await loginRes.json();
 
-      // if (!loginRes?.ok) {
-      //   toast.error(loginResult.error);
-      //   throw new Error("Something went wrong!");
-      // }
+      if (!loginRes?.ok) {
+        toast.error(loginResult.error);
+        throw new Error("Something went wrong!");
+      }
 
-      // const storeCookie = await fetch("/api/setcookie", {
-      //   method: "POST",
-      //   body: JSON.stringify({ token: loginResult.token }),
-      // });
+      const storeCookie = await fetch("/api/setcookie", {
+        method: "POST",
+        body: JSON.stringify({ token: loginResult.token }),
+      });
 
-      // if (!storeCookie.ok) {
-      //   toast.error("Something went wrong!");
-      //   throw new Error("Something went wrong!");
-      // }
+      if (!storeCookie.ok) {
+        toast.error("Something went wrong!");
+        throw new Error("Something went wrong!");
+      }
 
-      // toast.success("Successfully Logged In");
-      // setIsLoading(false);
-      // reset();
+      toast.success("Successfully Logged In");
+      setIsLoading(false);
+      reset();
 
-      // setTimeout(() => {
-      //   window.location.href = "/";
-      // }, 400);
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 400);
     } catch (err) {
       setIsLoading(false);
       console.log(`${err}` || "Sorry Could'nt Log In, Something happend!");
