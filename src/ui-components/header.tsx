@@ -67,8 +67,7 @@ const Header = (props: Props) => {
 
   async function logOut() {
     await fetch("/api/deletecookie");
-    router.push("/auth/login");
-    setToken("");
+    window.location.href = "/auth/login";
   }
 
   return (

@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value || "";
 
   if (isPublicPath && token) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/profile", request.url));
   }
 
   if (!isPublicPath && !token) {
@@ -21,14 +21,5 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: [
-    "/",
-    "/client",
-    "/extra",
-    "/protected",
-    "/role-based",
-    "/server",
-    "/auth/login",
-    "/auth/register",
-  ],
+  matcher: ["/", "/profile", "/auth/login", "/auth/register"],
 };

@@ -80,14 +80,14 @@ export function CardWithFormLoginAccount({ providers }: CustomProviders) {
       }
 
       toast.success("Successfully Logged In");
-      setIsLoading(false);
+      // setIsLoading(false);
       reset();
 
       setTimeout(() => {
-        window.location.href = "/";
+        window.location.href = "/profile";
       }, 400);
     } catch (err) {
-      setIsLoading(false);
+      // setIsLoading(false);
       console.log(`${err}` || "Sorry Could'nt Log In, Something happend!");
     }
   };

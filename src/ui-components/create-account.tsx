@@ -110,14 +110,14 @@ export function CardWithFormCreateAccount({ providers }: CustomProviders) {
           throw new Error("Something went wrong!");
         }
 
-        setIsLoading(false);
+        // setIsLoading(false);
         toast.success(`${emailResult.msg}`);
 
         setTimeout(() => {
           window.location.href = "/auth/verify-otp";
         }, 800);
       } catch (error) {
-        setIsLoading(false);
+        // setIsLoading(false);
         toast.error(`${error}`);
       }
     }

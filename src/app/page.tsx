@@ -1,19 +1,4 @@
-import { cookies } from "next/headers";
-
-const getUser = async () => {
-  const token = cookies().get("token");
-
-  const userDataRes = await fetch(`${process.env.NEXT_PUBLIC_API}/api/user`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token?.value}`,
-    },
-  });
-
-  const userDataResult = await userDataRes.json();
-
-  return userDataResult;
-};
+import getUser from "@/helpers/getUsersViaServer";
 
 export default async function Home() {
   const user = await getUser();

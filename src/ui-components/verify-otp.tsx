@@ -80,14 +80,14 @@ export function CardWithFormVerifyOtp() {
         throw new Error(`${verifyResult.error.error}`);
       }
 
-      setIsLoading(false);
+      // setIsLoading(false);
       toast.success(`${verifyResult.msg}`);
 
       setTimeout(() => {
         window.location.href = "/auth/login";
       }, 800);
     } catch (error) {
-      setIsLoading(false);
+      // setIsLoading(false);
       toast.error(`${error}`);
     }
   };
