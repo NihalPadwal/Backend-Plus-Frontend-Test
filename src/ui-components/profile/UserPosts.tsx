@@ -1,7 +1,7 @@
-import { POSTS_ARRAY_TYPES } from "@/types/posts";
+import POSTS_TYPES from "@/types/posts";
 import Image from "next/image";
 
-const UserPosts = ({ data }: POSTS_ARRAY_TYPES) => {
+const UserPosts = ({ data }: { data: POSTS_TYPES[] }) => {
   return (
     <div className="mt-10 mb-10 w-full gap-6 grid grid-cols-6">
       {data.map((_obj) => {
