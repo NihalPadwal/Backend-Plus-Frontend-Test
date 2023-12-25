@@ -1,12 +1,15 @@
 import Image from "next/image";
 import DefaultProfileImg from "@/../public/default_icons/profileImg.png";
 
+import CreatePost from "./CreatePost";
+
 interface Props {
   username: string;
   profileImg: string;
+  userId: any;
 }
 
-const UserInfo = ({ username, profileImg }: Props) => {
+const UserInfo = ({ username, profileImg, userId }: Props) => {
   return (
     <div className="w-full flex">
       <div className="profile rounded-full border-2 border-[var(--border)] w-[100px] h-[100px] overflow-hidden p-5">
@@ -38,6 +41,7 @@ const UserInfo = ({ username, profileImg }: Props) => {
         </div>
         <div className="name mb-2">User Test</div>
         <div className="desc">User desc</div>
+        <CreatePost username={username} userId={userId} />
       </div>
     </div>
   );

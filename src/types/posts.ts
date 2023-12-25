@@ -1,7 +1,11 @@
 export default interface POSTS_TYPES {
-  image?: string;
-  video?: string;
-  typeOfPost: "video" | "image";
+  _id: string;
+  username: string;
   userID: string;
-  postID: string;
+  isImage: Boolean;
+  isVideo: Boolean;
+  contentUrl: string;
+  likeCount: Number;
+  commentCount: Number;
+  caption: string;
 }
