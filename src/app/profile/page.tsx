@@ -15,6 +15,7 @@ const Index = async (props: Props) => {
         username={user.username}
         profileImg={user.profile}
         userId={user["_id"]}
+        postLength={posts.length}
       />
       <UserPosts data={posts} />
     </div>
