@@ -65,6 +65,7 @@ export function CardWithFormLoginAccount({ providers }: CustomProviders) {
       const loginResult = await loginRes.json();
 
       if (!loginRes?.ok) {
+        setIsLoading(false);
         toast.error(loginResult.error);
         throw new Error("Something went wrong!");
       }

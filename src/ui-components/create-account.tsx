@@ -56,6 +56,7 @@ export function CardWithFormCreateAccount({ providers }: CustomProviders) {
         const result = await res.json();
 
         if (!res.ok) {
+          setIsLoading(false);
           throw new Error(result.error.error);
         }
 
@@ -72,6 +73,7 @@ export function CardWithFormCreateAccount({ providers }: CustomProviders) {
         );
 
         if (!otpRes.ok) {
+          setIsLoading(false);
           throw new Error("Something went wrong!");
         }
 
@@ -94,6 +96,7 @@ export function CardWithFormCreateAccount({ providers }: CustomProviders) {
         );
 
         if (!emailRes.ok) {
+          setIsLoading(false);
           toast.error("Something went wrong!");
           throw new Error("Something went wrong!");
         }
@@ -106,6 +109,7 @@ export function CardWithFormCreateAccount({ providers }: CustomProviders) {
         });
 
         if (!storeCookie.ok) {
+          setIsLoading(false);
           toast.error("Something went wrong!");
           throw new Error("Something went wrong!");
         }
@@ -240,7 +244,7 @@ export function CardWithFormCreateAccount({ providers }: CustomProviders) {
               </div>
               <div className="pt-5">
                 <Button className="w-full" disabled={isLoading}>
-                  Login{" "}
+                  Register{" "}
                   {isLoading && (
                     <div className="animate-spin h-5 w-5 mr-3 border-4 rounded-full border-t-4 border-t-teal-400 ml-3"></div>
                   )}
