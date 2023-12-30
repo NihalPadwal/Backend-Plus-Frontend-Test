@@ -8,17 +8,31 @@ interface Props {
   profileImg: string;
   userId: any;
   postLength: number;
+  followers: number;
+  following: number;
+  profile: string;
+  info: string;
 }
 
-const UserInfo = ({ username, profileImg, userId, postLength }: Props) => {
+const UserInfo = ({
+  username,
+  profileImg,
+  userId,
+  postLength,
+  followers,
+  following,
+  profile,
+  info,
+}: Props) => {
   return (
     <div className="w-full flex">
-      <div className="profile rounded-full border-2 border-[var(--border)] w-[100px] h-[100px] overflow-hidden p-5">
-        <div className="img  w-full h-full relative ">
+      <div className="profile rounded-full border-2 border-[var(--border)] w-[100px] h-[100px] overflow-hidden ">
+        <div className="img w-full h-full relative ">
           <Image
             src={profileImg ? profileImg : DefaultProfileImg}
             alt="profile-image"
             fill
+            className="object-cover"
           />
         </div>
       </div>
@@ -32,16 +46,15 @@ const UserInfo = ({ username, profileImg, userId, postLength }: Props) => {
             <span className="ml-2">Posts</span>
           </div>
           <div className="followers">
-            <span>0</span>
+            <span>{followers}</span>
             <span className="ml-2">Followers</span>
           </div>
           <div className="following">
-            <span>0</span>
+            <span>{following}</span>
             <span className="ml-2">Following</span>
           </div>
         </div>
-        <div className="name mb-2">User Test</div>
-        <div className="desc">User desc</div>
+        <div className="desc">{info || "Desc"}</div>
         <CreatePost username={username} userId={userId} />
       </div>
     </div>

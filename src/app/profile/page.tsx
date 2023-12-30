@@ -9,6 +9,8 @@ const Index = async (props: Props) => {
   const user = await getUser();
   const posts = await getPostsServer();
 
+  console.log(user);
+
   return (
     <div className="w-full px-20 py-8">
       <UserInfo
@@ -16,6 +18,10 @@ const Index = async (props: Props) => {
         profileImg={user.profile}
         userId={user["_id"]}
         postLength={posts.length}
+        followers={user.followerCount}
+        following={user.followingCount}
+        profile={user.profile}
+        info={user.info}
       />
       <UserPosts data={posts} />
     </div>
