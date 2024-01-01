@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 // shadcn-ui
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,7 @@ const CreatePost = ({
   userId: String;
   username: String;
 }) => {
+  const router = useRouter();
   // states
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -145,7 +147,8 @@ const CreatePost = ({
 
     form.reset();
 
-    window.location.href = "/profile";
+    // Force refresh the page
+    router.refresh();
   }
 
   // runs when dialog opens or closes

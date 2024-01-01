@@ -1,9 +1,13 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function getUser({ username }: { username: string }) {
+type Props = {
+  username?: string;
+};
+
+export default async function getUser(props: Props) {
   // username params
-  const usernameparams = username ? `?username=${username}` : "";
+  const usernameparams = props?.username ? `?username=${props.username}` : "";
 
   const token = cookies().get("token");
 

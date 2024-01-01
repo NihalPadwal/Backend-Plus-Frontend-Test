@@ -30,9 +30,12 @@ const UserPosts = ({ data }: { data: POSTS_TYPES[] }) => {
   const [userId, setUserId] = useState<
     { _id: string; username: string } | undefined
   >();
+  // to abort create post requests
+  const commentsSignal = new AbortController();
 
   // function to get comments
   async function getComments({ id }: { id: string }) {
+    console.log("ran");
     setLoading(true);
     const resToken = await fetch("/api/getcookie");
 
@@ -50,6 +53,7 @@ const UserPosts = ({ data }: { data: POSTS_TYPES[] }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        signal: commentsSignal.signal,
       }
     );
 
@@ -60,7 +64,9 @@ const UserPosts = ({ data }: { data: POSTS_TYPES[] }) => {
 
   // runs when pop up opens or closes
   function openPost(id: string, isOpen: boolean) {
-    if (!isOpen) getComments({ id: id });
+    if (!isOpen) {
+      setComment(undefined);
+    }
   }
 
   // function to create comment
@@ -149,7 +155,8 @@ const UserPosts = ({ data }: { data: POSTS_TYPES[] }) => {
                 </DialogTitle>
                 <DialogDescription>
                   <ScrollArea className="mt-5 h-[40vh] w-full rounded-md border ">
-                    {comments &&
+                    {!loading &&
+                      comments &&
                       comments?.map((item, index) => {
                         return (
                           <Comment

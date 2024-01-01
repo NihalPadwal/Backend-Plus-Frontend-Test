@@ -153,8 +153,8 @@ const Header = (props: Props) => {
 
             {token === "isLoggedIn" && (
               <>
-                <Link href={"/profile"}>
-                  <DropdownMenuRadioItem value="profile">
+                <Link href={"/"}>
+                  <DropdownMenuRadioItem value="">
                     Profile
                   </DropdownMenuRadioItem>
                 </Link>

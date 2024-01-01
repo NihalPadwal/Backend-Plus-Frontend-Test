@@ -1,8 +1,12 @@
 import { cookies } from "next/headers";
 
-export async function getPostsServer({ username }: { username: string }) {
+type Props = {
+  username?: string;
+};
+
+export async function getPostsServer(props: Props) {
   // username params
-  const usernameparams = username ? `?username=${username}` : "";
+  const usernameparams = props?.username ? `?username=${props.username}` : "";
 
   const cookieStore = cookies();
   const token = cookieStore.get("token");

@@ -85,7 +85,7 @@ export function CardWithFormLoginAccount({ providers }: CustomProviders) {
       reset();
 
       setTimeout(() => {
-        window.location.href = "/profile";
+        window.location.href = `/${loginResult.username}`;
       }, 400);
     } catch (err) {
       // setIsLoading(false);
