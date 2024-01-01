@@ -12,6 +12,7 @@ interface Props {
   following: number;
   profile: string;
   info: string;
+  isLoggedInUser: boolean;
 }
 
 const UserInfo = ({
@@ -23,6 +24,7 @@ const UserInfo = ({
   following,
   profile,
   info,
+  isLoggedInUser,
 }: Props) => {
   return (
     <div className="w-full flex">
@@ -55,7 +57,7 @@ const UserInfo = ({
           </div>
         </div>
         <div className="desc">{info || "Desc"}</div>
-        <CreatePost username={username} userId={userId} />
+        {isLoggedInUser && <CreatePost username={username} userId={userId} />}
       </div>
     </div>
   );

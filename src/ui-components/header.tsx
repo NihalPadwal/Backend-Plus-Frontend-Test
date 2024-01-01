@@ -70,6 +70,10 @@ const Header = (props: Props) => {
     window.location.href = "/auth/login";
   }
 
+  if (usePathNameObj === "/404") {
+    return;
+  }
+
   return (
     <div className="w-full flex justify-between items-center px-20 py-8">
       {!token && (
