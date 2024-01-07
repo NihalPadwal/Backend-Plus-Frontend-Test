@@ -25,13 +25,14 @@ const SearchContainer = (props: Props) => {
     }
 
     const value = e.target.search.value?.toLowerCase();
+
     setLoading(true);
 
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API}/api/searchUsers?username=${value}`
     );
 
-    if (!res.ok) {
+    if (!res.ok || value === undefined) {
       router.replace(`/search`);
       setLoading(false);
       setUsers([]);
@@ -41,8 +42,8 @@ const SearchContainer = (props: Props) => {
     const data = await res.json();
 
     setUsers(data);
-
     setLoading(false);
+    router.replace(`/search?value=${value}`);
   }
 
   useEffect(() => {
