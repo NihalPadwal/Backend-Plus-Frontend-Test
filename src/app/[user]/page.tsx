@@ -2,6 +2,7 @@ import getUser from "@/helpers/getUsersViaServer";
 import UserInfo from "@/ui-components/profile/UserInfo";
 import UserPosts from "@/ui-components/profile/UserPosts";
 import { getPostsServer } from "@/helpers/getPostsServer";
+import { getFollowedStatus } from "@/helpers/getFollowedStatus";
 
 type Props = {
   params: { user: string };
@@ -10,6 +11,7 @@ type Props = {
 const Index = async (props: Props) => {
   const user = await getUser({ username: props.params.user });
   const posts = await getPostsServer({ username: props.params.user });
+  const isFollowed = await getFollowedStatus({ selectedUser: user._id });
   const isLoggedInUser = await user.isLoggedUser;
 
   if (user.error) {
@@ -28,6 +30,7 @@ const Index = async (props: Props) => {
         profile={user.profile}
         info={user.info}
         isLoggedInUser={isLoggedInUser}
+        isFollowed={isFollowed}
       />
       <UserPosts data={posts} />
     </div>

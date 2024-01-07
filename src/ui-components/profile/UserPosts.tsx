@@ -127,7 +127,7 @@ const UserPosts = ({ data }: { data: POSTS_TYPES[] }) => {
             <DialogTrigger onClick={() => getComments({ id: _obj._id })}>
               <div className="post">
                 {_obj.isImage && (
-                  <div className="post_wrapper relative h-[30vh] w-full object-cover cursor-pointer">
+                  <div className="post_wrapper relative max-h-[30vh] h-[30vh] w-full object-cover cursor-pointer">
                     <Image
                       src={_obj.contentUrl}
                       alt="asd"
@@ -146,7 +146,7 @@ const UserPosts = ({ data }: { data: POSTS_TYPES[] }) => {
                   alt="Photo by Drew Beamer"
                   height={500}
                   width={500}
-                  className="rounded-md"
+                  className="rounded-md aspect-[16/9] object-contain h-full"
                 />
               </DialogHeader>
               <div>

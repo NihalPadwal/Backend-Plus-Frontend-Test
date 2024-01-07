@@ -42,6 +42,7 @@ const CreatePost = ({
   const router = useRouter();
   // states
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const contents = "image/jpeg,image/jpg,image/png,image/webp";
   const MAX_FILE_SIZE = 5000000;
@@ -147,12 +148,16 @@ const CreatePost = ({
 
     form.reset();
 
+    setOpen(false);
+    setLoading(false);
+
     // Force refresh the page
     router.refresh();
   }
 
   // runs when dialog opens or closes
   function handleDialogOpenStatus(value: boolean) {
+    setOpen(!open);
     if (!value) {
       setLoading(false);
       form.reset();
@@ -169,7 +174,7 @@ const CreatePost = ({
   }
 
   return (
-    <Dialog onOpenChange={handleDialogOpenStatus}>
+    <Dialog open={open} onOpenChange={handleDialogOpenStatus}>
       <DialogTrigger asChild className="mt-3">
         <Button variant="outline">Create Post</Button>
       </DialogTrigger>
