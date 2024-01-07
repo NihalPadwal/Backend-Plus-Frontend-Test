@@ -11,6 +11,10 @@ export default async function getUser(props: Props) {
 
   const token = cookies().get("token");
 
+  if (!token) {
+    redirect("/auth/login");
+  }
+
   const userDataRes = await fetch(
     `${process.env.NEXT_PUBLIC_API}/api/user${usernameparams}`,
     {
