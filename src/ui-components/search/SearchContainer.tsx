@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 //shadcn ui
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,6 +17,7 @@ type Props = {
 const SearchContainer = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [users, setUsers] = useState<{ username: string; profile: string }[]>();
+  const router = useRouter();
 
   async function search(e: any) {
     if (e.preventDefault) {
@@ -30,7 +32,9 @@ const SearchContainer = (props: Props) => {
     );
 
     if (!res.ok) {
+      router.replace(`/search`);
       setLoading(false);
+      setUsers([]);
       return;
     }
 
