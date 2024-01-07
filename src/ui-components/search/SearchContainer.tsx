@@ -22,12 +22,17 @@ const SearchContainer = (props: Props) => {
       e?.preventDefault();
     }
 
-    const value = e.target.search.value.toLowerCase();
+    const value = e.target.search.value?.toLowerCase();
     setLoading(true);
 
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API}/api/searchUsers?username=${value}`
     );
+
+    if (!res.ok) {
+      setLoading(false);
+      return;
+    }
 
     const data = await res.json();
 
@@ -62,35 +67,39 @@ const SearchContainer = (props: Props) => {
         </Button>
       </form>
       <div className="posts">
-        {users?.map((user) => {
-          return (
-            <Card key={user.username} className="mt-6">
-              <CardContent className="p-3">
-                <Link
-                  href={`/${user.username}`}
-                  className="user flex items-center gap-7 cursor-pointer"
-                >
-                  <div className="image relative h-[10vh] w-[10%] object-cover cursor-pointer rounded-full overflow-hidden">
-                    <Image
-                      src={
-                        user.profile === ""
-                          ? "/default_icons/profileImg.png"
-                          : user.profile
-                      }
-                      alt="asd"
-                      fill={true}
-                      objectFit="cover"
-                      priority
-                    />
-                  </div>
-                  <div className="username">
-                    <h6>{user.username}</h6>
-                  </div>
-                </Link>
-              </CardContent>
-            </Card>
-          );
-        })}
+        {users &&
+          users?.map((user) => {
+            return (
+              <Card key={user.username} className="mt-6">
+                <CardContent className="p-3">
+                  <Link
+                    href={`/${user.username}`}
+                    className="user flex items-center gap-7 cursor-pointer"
+                  >
+                    <div className="image relative h-[100px] w-[100px] object-cover cursor-pointer rounded-full overflow-hidden">
+                      <Image
+                        src={
+                          user.profile === ""
+                            ? "/default_icons/profileImg.png"
+                            : user.profile
+                        }
+                        alt="asd"
+                        fill={true}
+                        objectFit="cover"
+                        priority
+                      />
+                    </div>
+                    <div className="username">
+                      <h6>{user.username}</h6>
+                    </div>
+                  </Link>
+                </CardContent>
+              </Card>
+            );
+          })}
+        {!loading && users?.length === 0 && (
+          <h6 className="mt-7">No Users Found...</h6>
+        )}
       </div>
     </div>
   );
