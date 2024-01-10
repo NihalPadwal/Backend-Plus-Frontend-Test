@@ -130,6 +130,7 @@ const UserPosts = ({
                       alt="asd"
                       fill={true}
                       objectFit="cover"
+                      objectPosition="top"
                       priority
                     />
                   </div>
