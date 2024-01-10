@@ -10,11 +10,17 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json({ error: "Error" }, { status: 404 });
   }
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/userStats`, {
-    headers: {
-      Authorization: `Bearer ${token.value}`,
-    },
-  });
+  const { searchParams } = new URL(request.url);
+  const param = searchParams.get("username");
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API}/api/userStats?username=${param}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    }
+  );
 
   const data = await res.json();
 

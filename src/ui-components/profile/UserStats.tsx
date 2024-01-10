@@ -8,6 +8,7 @@ import { getFollowedStatus } from "@/helpers/getFollowedStatus";
 import { useEffect, useState } from "react";
 
 interface Props {
+  username: string;
   userId: any;
   // postLength: number;
   // followers: number;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 const UserStats = ({
+  username,
   userId,
   // postLength,
   // followers,
@@ -65,7 +67,7 @@ const UserStats = ({
 
   const getStats = async () => {
     setLoading(true);
-    const res = await fetch("api/getUserStats");
+    const res = await fetch(`/api/getUserStats?username=${username}`);
 
     if (!res.ok) {
       setLoading(false);

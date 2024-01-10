@@ -49,6 +49,7 @@ const UserInfo = ({
           <div className="text">{username}</div>
         </div>
         <UserStats
+          username={username}
           userId={userId}
           isLoggedInUser={isLoggedInUser}
           isFollowed={isFollowed}
