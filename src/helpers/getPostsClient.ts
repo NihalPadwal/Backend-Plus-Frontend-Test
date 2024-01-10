@@ -1,4 +1,11 @@
-export async function getPostsClient() {
+type Props = {
+  username?: string;
+};
+
+export async function getPostsClient(props: Props) {
+  // username params
+  const usernameparams = props?.username ? `?username=${props.username}` : "";
+
   const tokenRes = await fetch("/api/getcookie");
 
   if (!tokenRes.ok) {
@@ -7,11 +14,14 @@ export async function getPostsClient() {
 
   const tokenData = await tokenRes.json();
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/posts`, {
-    headers: {
-      Authorization: `Bearer ${tokenData.token.value}`,
-    },
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API}/api/posts${usernameparams}`,
+    {
+      headers: {
+        Authorization: `Bearer ${tokenData.token.value}`,
+      },
+    }
+  );
 
   const data = await res.json();
 

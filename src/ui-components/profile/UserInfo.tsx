@@ -7,41 +7,31 @@ import CreatePost from "./CreatePost";
 import { Button } from "@/components/ui/button";
 import { followUser } from "@/helpers/followUser";
 import { useRef } from "react";
+import UserStats from "./UserStats";
 
 interface Props {
   username: string;
   profileImg: string;
   userId: any;
-  postLength: number;
-  followers: number;
-  following: number;
-  profile: string;
+  // postLength: number;
+  // followers: number;
+  // following: number;
+  // profile: string;
   info: string;
   isLoggedInUser: boolean;
   isFollowed?: boolean;
+  setReRender?: any;
 }
 
 const UserInfo = ({
   username,
   profileImg,
   userId,
-  postLength,
-  followers,
-  following,
-  profile,
   info,
   isLoggedInUser,
   isFollowed,
+  setReRender,
 }: Props) => {
-  const follow = async () => {
-    "use server";
-
-    const res = await followUser({ userId: userId });
-    if (res.message) {
-      revalidateTag("followUser");
-    }
-  };
-
   return (
     <div className="w-full flex">
       <div className="profile rounded-full border-2 border-[var(--border)] w-[100px] h-[100px] overflow-hidden ">
@@ -58,32 +48,19 @@ const UserInfo = ({
         <div className="username mb-2">
           <div className="text">{username}</div>
         </div>
-        <div className="counts flex items-center gap-6 mb-2">
-          <div className="posts">
-            <span>{postLength}</span>
-            <span className="ml-2">Posts</span>
-          </div>
-          <div className="followers">
-            <span>{followers}</span>
-            <span className="ml-2">Followers</span>
-          </div>
-          <div className="following flex items-center">
-            <span>{following}</span>
-            <span className="ml-2">Following</span>
-            {!isLoggedInUser && (
-              <form action={follow} className="ml-5">
-                <Button
-                  type="submit"
-                  variant={isFollowed ? "secondary" : "outline"}
-                >
-                  {isFollowed ? "Unfollow" : "Follow"}
-                </Button>
-              </form>
-            )}
-          </div>
-        </div>
+        <UserStats
+          userId={userId}
+          isLoggedInUser={isLoggedInUser}
+          isFollowed={isFollowed}
+        />
         <div className="desc">{info || "Desc"}</div>
-        {isLoggedInUser && <CreatePost username={username} userId={userId} />}
+        {isLoggedInUser && (
+          <CreatePost
+            username={username}
+            userId={userId}
+            setReRender={setReRender}
+          />
+        )}
       </div>
     </div>
   );

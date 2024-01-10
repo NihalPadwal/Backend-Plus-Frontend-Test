@@ -35,10 +35,13 @@ import { useForm } from "react-hook-form";
 const CreatePost = ({
   username,
   userId,
+  setReRender,
 }: {
   userId: String;
   username: String;
+  setReRender: any;
 }) => {
+  // router
   const router = useRouter();
   // states
   const [loading, setLoading] = useState<boolean>(false);
@@ -152,7 +155,9 @@ const CreatePost = ({
     setLoading(false);
 
     // Force refresh the page
+    setReRender((prev: number) => prev + 1);
     router.refresh();
+    console.log("post created");
   }
 
   // runs when dialog opens or closes

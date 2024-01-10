@@ -1,12 +1,12 @@
-import { cookies } from "next/headers";
-
 type Props = {
   userId: string;
 };
 
 export async function followUser(props: Props) {
-  const cookieStore = cookies();
-  const token = cookieStore.get("token");
+  const getToken = await fetch("/api/getcookie");
+
+  const tokenData = await getToken.json();
+  const token = await tokenData.token.value;
 
   if (!token) {
     throw Error("No token found");
@@ -16,7 +16,7 @@ export async function followUser(props: Props) {
     next: { tags: ["followUser"] },
     method: "PUT",
     headers: {
-      Authorization: `Bearer ${token.value}`,
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
