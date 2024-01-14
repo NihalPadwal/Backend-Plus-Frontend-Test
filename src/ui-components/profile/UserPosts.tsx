@@ -24,6 +24,7 @@ import { HeartIcon, HeartFilledIcon } from "@radix-ui/react-icons";
 // TYPES
 import COMMENTS_TYPES from "@/types/comments";
 import { getPostsClient } from "@/helpers/getPostsClient";
+import { getToken } from "@/helpers/getToken";
 
 const UserPosts = ({
   username,
@@ -36,6 +37,10 @@ const UserPosts = ({
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [comments, setComment] = useState<COMMENTS_TYPES[] | undefined>();
+  const [loggedInUserId, setLoggedInUserId] = useState<{
+    userID: string;
+    username: string;
+  }>({ userID: "", username: "" });
 
   const [posts, setPosts] = useState<POSTS_TYPES[] | undefined>();
 
@@ -94,6 +99,7 @@ const UserPosts = ({
           username: username,
           postId: id,
           comment: value,
+          commentorId: loggedInUserId.userID,
         }),
       }
     );
@@ -111,6 +117,22 @@ const UserPosts = ({
     };
     getPosts();
   }, [reRedner]);
+
+  async function getAuthToken() {
+    const token = await getToken();
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/userid`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+    setLoggedInUserId(data);
+  }
+
+  useEffect(() => {
+    getAuthToken();
+  }, []);
 
   if (!posts) {
     return <p>Loading Posts...</p>;
