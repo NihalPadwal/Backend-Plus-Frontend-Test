@@ -18,6 +18,8 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+import { Toaster, toast } from "sonner";
+
 // icon
 import { HeartIcon, HeartFilledIcon } from "@radix-ui/react-icons";
 
@@ -25,6 +27,7 @@ import { HeartIcon, HeartFilledIcon } from "@radix-ui/react-icons";
 import COMMENTS_TYPES from "@/types/comments";
 import { getPostsClient } from "@/helpers/getPostsClient";
 import { getToken } from "@/helpers/getToken";
+import Link from "next/link";
 
 const UserPosts = ({
   username,
@@ -85,6 +88,7 @@ const UserPosts = ({
   // function to create comment
   async function createComment(e: any, id: any) {
     setLoading(true);
+
     e.preventDefault();
     const value = e.target.comment.value;
 
@@ -103,6 +107,12 @@ const UserPosts = ({
         }),
       }
     );
+
+    if (!res.ok) {
+      return;
+    }
+
+    toast.success("Successfully Created Comment!");
 
     getComments({ id: id });
     setLoading(false);
@@ -140,6 +150,7 @@ const UserPosts = ({
 
   return (
     <div className="mt-10 mb-10 w-full gap-3 grid grid-cols-6">
+      <Toaster richColors />
       {posts?.map((_obj) => {
         return (
           <Dialog key={_obj._id} onOpenChange={(e) => openPost(_obj._id, e)}>
@@ -186,6 +197,8 @@ const UserPosts = ({
                             id={item._id}
                             userId={userId || ""}
                             isAlreadyLiked={item.likedBy.includes(userId || "")}
+                            username={item.commentorId.username}
+                            profile={item.commentorId.profile}
                           />
                         );
                       })}
@@ -223,12 +236,16 @@ const Comment = ({
   id,
   userId,
   isAlreadyLiked,
+  username,
+  profile,
 }: {
   text: string;
   likeCount: number;
   id: string;
   userId: string;
   isAlreadyLiked: boolean;
+  username: string;
+  profile: string;
 }) => {
   const [isLiked, setIsLiked] = useState<boolean>(isAlreadyLiked);
   const [likes, setLikes] = useState<number>(likeCount);
@@ -266,22 +283,39 @@ const Comment = ({
     setIsLiked(!isLiked);
     setLoading(false);
   }
+
   return (
     <div>
-      <div className="p-3 flex items-center justify-between ">
-        {text}
-        <div
-          onClick={likeComment}
-          className={`text-center cursor-pointer ${
-            loading && "pointer-events-none"
-          }`}
-        >
-          {isLiked ? (
-            <HeartFilledIcon className="" />
-          ) : (
-            <HeartIcon className="" />
-          )}
-          <p className="text-xs mt-auto text-black">{likes}</p>
+      <div className="flex items-center  pl-3 pt-3">
+        <Link href={`/${username}`} className="user flex gap-1 items-center">
+          <div className="h-[30px] w-[30px] relative rounded-full overflow-hidden border-[var(--border)] border-2">
+            <Image
+              src={
+                profile ||
+                "https://worksbynihal-social-app.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FprofileImg.7b8b0f2a.png&w=1920&q=75"
+              }
+              alt="comment-profile-image"
+              fill
+              className="object-cover"
+            />
+          </div>
+          <p className="font-bold">{username}</p>
+        </Link>
+        <div className="p-3 flex items-center justify-between flex-1">
+          {text}
+          <div
+            onClick={likeComment}
+            className={`text-center cursor-pointer ${
+              loading && "pointer-events-none"
+            }`}
+          >
+            {isLiked ? (
+              <HeartFilledIcon className="" />
+            ) : (
+              <HeartIcon className="" />
+            )}
+            <p className="text-xs mt-auto text-black">{likes}</p>
+          </div>
         </div>
       </div>
       <Separator className="mt-2" />

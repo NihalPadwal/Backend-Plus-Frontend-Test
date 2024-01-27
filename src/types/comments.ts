@@ -5,4 +5,8 @@ export default interface COMMENTS_TYPES {
   postId: string;
   repliedToID: string;
   likedBy: string[];
+  commentorId: {
+    username: string;
+    profile: string;
+  };
 }
