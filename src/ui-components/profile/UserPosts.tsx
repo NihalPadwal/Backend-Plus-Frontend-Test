@@ -256,6 +256,12 @@ const Comment = ({
 
     const letLikes = isLiked ? likes - 1 : likes + 1;
 
+    console.log({
+      id: id,
+      likes: letLikes,
+      likedById: userId,
+    });
+
     setLikes(letLikes);
 
     const resToken = await fetch("/api/getcookie");
@@ -275,7 +281,7 @@ const Comment = ({
       },
       body: JSON.stringify({
         id: id,
-        likes: letLikes,
+        likes: `${letLikes}`,
         likedById: userId,
       }),
     });
