@@ -80,9 +80,7 @@ const UpdateUserInfo = ({
 
   // validation schema
   const formSchema = z.object({
-    desc: z.string().min(1, {
-      message: "desc is required",
-    }),
+    desc: z.string().optional(),
     content: z
       .custom<FileList>((val) => val instanceof FileList, "Required")
       .refine((files) => files.length > 0, `Content is Required`)
@@ -305,16 +303,19 @@ const UpdateUserInfo = ({
               <FormField
                 control={form.control}
                 name="desc"
+                defaultValue={desc}
                 disabled={loading}
                 render={({ field }) => (
                   <FormItem className="grid grid-cols-4 items-center gap-4 w-full">
                     <FormLabel className="text-left">Desc</FormLabel>
                     <FormControl>
                       <Input
+                        type="text"
                         id="desc"
                         placeholder={desc}
                         className="col-span-3"
                         {...field}
+                        value={field.value || desc}
                       />
                     </FormControl>
                     <FormMessage className="col-span-4" />
