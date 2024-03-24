@@ -7,7 +7,10 @@ import CreatePost from "./CreatePost";
 import { Button } from "@/components/ui/button";
 import { followUser } from "@/helpers/followUser";
 import { useRef } from "react";
+
+// UI
 import UserStats from "./UserStats";
+import UpdateUserInfo from "./UpdateUserInfo";
 
 interface Props {
   username: string;
@@ -37,7 +40,7 @@ const UserInfo = ({
       <div className="profile rounded-full border-2 border-[var(--border)] w-[100px] h-[100px] overflow-hidden ">
         <div className="img w-full h-full relative ">
           <Image
-            src={profileImg ? profileImg : DefaultProfileImg}
+            src={profileImg}
             alt="profile-image"
             fill
             className="object-cover"
@@ -62,6 +65,13 @@ const UserInfo = ({
             setReRender={setReRender}
           />
         )}
+        <UpdateUserInfo
+          username={username}
+          userId={userId}
+          profileImg={profileImg}
+          setReRender={setReRender}
+          desc={info}
+        />
       </div>
     </div>
   );
