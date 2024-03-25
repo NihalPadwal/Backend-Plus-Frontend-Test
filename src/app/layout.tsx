@@ -7,7 +7,7 @@ import NextTopLoader from "nextjs-toploader";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Social Media by Nihal",
+  title: "BeerGram - Social Media App By Nihal Padwal",
   description: "Generated and create by Nihal",
 };
 

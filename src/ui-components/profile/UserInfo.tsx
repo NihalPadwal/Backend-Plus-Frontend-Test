@@ -59,19 +59,21 @@ const UserInfo = ({
         />
         <div className="desc">{info || "Desc"}</div>
         {isLoggedInUser && (
-          <CreatePost
-            username={username}
-            userId={userId}
-            setReRender={setReRender}
-          />
+          <>
+            <CreatePost
+              username={username}
+              userId={userId}
+              setReRender={setReRender}
+            />
+            <UpdateUserInfo
+              username={username}
+              userId={userId}
+              profileImg={profileImg}
+              setReRender={setReRender}
+              desc={info}
+            />
+          </>
         )}
-        <UpdateUserInfo
-          username={username}
-          userId={userId}
-          profileImg={profileImg}
-          setReRender={setReRender}
-          desc={info}
-        />
       </div>
     </div>
   );
