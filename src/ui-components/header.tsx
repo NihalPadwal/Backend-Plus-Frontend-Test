@@ -24,9 +24,12 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
+import getUser from "@/helpers/getUsersViaServer";
+
 type Props = {};
 
 const Header = (props: Props) => {
+  const [user, setUser] = useState<{ username: string }>();
   const [token, setToken] = useState("");
   const [position, setPosition] = useState<string>("");
   const usePathNameObj = usePathname();
@@ -34,7 +37,6 @@ const Header = (props: Props) => {
     usePathNameObj.split("/").length > 2
       ? usePathNameObj.split("/")[2]
       : usePathNameObj.split("/")[1];
-  const router = useRouter();
 
   useEffect(() => {
     setPosition(pathname);
@@ -49,6 +51,9 @@ const Header = (props: Props) => {
           throw Error("No token found");
         }
 
+        const userdata = await getUser({});
+        setUser(userdata);
+
         setToken("isLoggedIn");
       } catch (err) {
         console.log(err);
@@ -62,7 +67,6 @@ const Header = (props: Props) => {
 
   function handlePageChange(e: string) {
     setPosition(e);
-    // router.push(`/${e}`, { scroll: false });
   }
 
   async function logOut() {
@@ -144,25 +148,17 @@ const Header = (props: Props) => {
             )}
 
             {token === "isLoggedIn" && (
-              <div onClick={logOut}>
-                <DropdownMenuRadioItem value="logout">
-                  Sign Out
-                </DropdownMenuRadioItem>
-              </div>
-            )}
-
-            {token === "isLoggedIn" && (
               <>
-                <Link href={"/"}>
-                  <DropdownMenuRadioItem value="">
+                <div onClick={logOut}>
+                  <DropdownMenuRadioItem value="logout">
+                    Sign Out
+                  </DropdownMenuRadioItem>
+                </div>
+                <Link href={`/${user?.username || ""}`}>
+                  <DropdownMenuRadioItem value={`${user?.username || ""}`}>
                     Profile
                   </DropdownMenuRadioItem>
                 </Link>
-              </>
-            )}
-
-            {token === "isLoggedIn" && (
-              <>
                 <Link href={"/search"}>
                   <DropdownMenuRadioItem value="search">
                     Search Users

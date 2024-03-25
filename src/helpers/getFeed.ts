@@ -5,12 +5,11 @@ import { redirect } from "next/navigation";
 
 type Props = {
   username?: string;
+  limit?: number;
+  skip?: number;
 };
 
-export default async function getUser(props: Props) {
-  // username params
-  const usernameparams = props?.username ? `?username=${props.username}` : "";
-
+export default async function getFeed(props: Props) {
   const token = cookies().get("token");
 
   if (!token) {
@@ -18,7 +17,9 @@ export default async function getUser(props: Props) {
   }
 
   const userDataRes = await fetch(
-    `${process.env.NEXT_PUBLIC_API}/api/user${usernameparams}`,
+    `${process.env.NEXT_PUBLIC_API}/api/feed?limit=${
+      props.limit || "10"
+    }&skip=${props.skip || "0"}`,
     {
       headers: {
         "Content-Type": "application/json",
