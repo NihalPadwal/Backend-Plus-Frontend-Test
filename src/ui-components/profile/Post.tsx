@@ -33,6 +33,10 @@ const IconHeartFillSvg = Icons["heartFill"];
 type Props = {
   _id: string;
   data?: any;
+  loggedInUserId: {
+    userID: string;
+    username: string;
+  };
 };
 
 const img = "https://media.graphassets.com/fyKG82MzTbOjaLmi6Nf8";
@@ -44,13 +48,10 @@ const Post = (props: Props) => {
     username: string;
     profile: string;
     _id: string;
-  }>();
+  }>(props.data.userID);
   const [loading, setLoading] = useState<boolean>(false);
   const [comments, setComment] = useState<COMMENTS_TYPES[] | undefined>();
-  const [loggedInUserId, setLoggedInUserId] = useState<{
-    userID: string;
-    username: string;
-  }>({ userID: "", username: "" });
+
   // to abort create post requests
   const commentsSignal = new AbortController();
 
@@ -64,32 +65,6 @@ const Post = (props: Props) => {
       return 0;
     });
   };
-
-  const getUserDetail = async (userid: string) => {
-    const token = await getToken();
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API}/api/user?selectedUserId=${userid}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    const data = await res.json();
-    setUser(data);
-  };
-
-  async function getAuthToken() {
-    const token = await getToken();
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/userid`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const data = await res.json();
-    setLoggedInUserId(data);
-  }
 
   // function to get comments
   async function getComments({ id }: { id: string }) {
@@ -136,7 +111,7 @@ const Post = (props: Props) => {
           username: user?.username,
           postId: id,
           comment: value,
-          commentorId: loggedInUserId.userID,
+          commentorId: props.loggedInUserId.userID,
         }),
       }
     );
@@ -151,11 +126,12 @@ const Post = (props: Props) => {
     setLoading(false);
   }
 
-  useEffect(() => {
-    getUserDetail(props.data.userID);
-    getComments({ id: props._id });
-    getAuthToken();
-  }, []);
+  // show comments
+  async function showComments(value: boolean) {
+    if (value) {
+      getComments({ id: props._id });
+    }
+  }
 
   return (
     <div className="w-max p-4  rounded-md border max-w-[700px] mt-5">
@@ -202,7 +178,7 @@ const Post = (props: Props) => {
         </button>
       </div>
       <div className="w-full font-bold">{props.data.caption}</div>
-      <Dialog>
+      <Dialog onOpenChange={(value) => showComments(value)}>
         <DialogTrigger>
           <div className="mt-5 cursor-pointer bg-primary text-white p-2 text-sm rounded-sm">
             Comments
@@ -220,9 +196,9 @@ const Post = (props: Props) => {
                       text={item.comment}
                       likeCount={item.likes}
                       id={item._id}
-                      userId={props.data.userID || ""}
+                      userId={props.data.userID._id || ""}
                       isAlreadyLiked={item.likedBy.includes(
-                        props.data.userID || ""
+                        props.data.userID_id || ""
                       )}
                       username={item.commentorId.username}
                       profile={item.commentorId.profile}

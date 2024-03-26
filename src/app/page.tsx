@@ -1,10 +1,9 @@
 import getFeed from "@/helpers/getFeed";
 
 // shadcn ui
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 // component
-import Post from "@/ui-components/profile/Post";
+import FeedContainer from "@/ui-components/feed/FeedContainer";
 
 type Props = {};
 
@@ -17,13 +16,7 @@ const Index = async (props: Props) => {
 
   return (
     <div className="flex w-full h-[90vh] px-20 py-8">
-      <ScrollArea className="h-full w-full rounded-md">
-        <div className="h-full w-full flex flex-col items-center justify-center">
-          {data.posts.map((item: { _id: string }) => {
-            return <Post key={item._id} _id={item._id} data={item} />;
-          })}
-        </div>
-      </ScrollArea>
+      <FeedContainer data={data} />
     </div>
   );
 };
