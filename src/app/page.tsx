@@ -15,7 +15,7 @@ const Index = async (props: Props) => {
   }
 
   return (
-    <div className="flex w-full h-[90vh] px-20 py-8">
+    <div className="flex w-full h-[calc(100vh-100px)] px-20 py-8">
       <FeedContainer data={data} />
     </div>
   );

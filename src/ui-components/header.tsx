@@ -79,7 +79,7 @@ const Header = (props: Props) => {
   }
 
   return (
-    <div className="w-full flex justify-between items-center px-20 py-8">
+    <div className="w-full flex justify-between items-center px-20 py-8 h-[100px]">
       {!token && (
         <a href={"/"}>
           <Image

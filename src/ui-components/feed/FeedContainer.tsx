@@ -6,6 +6,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 // component
 import Post from "@/ui-components/profile/Post";
+import getFeed from "@/helpers/getFeed";
+
 import { getToken } from "@/helpers/getToken";
 
 type Props = {
@@ -17,6 +19,8 @@ const FeedContainer = (props: Props) => {
     userID: string;
     username: string;
   }>({ userID: "", username: "" });
+  const [posts, setPosts] = useState(props.data.posts);
+  const [pagination, setPagination] = useState({ limit: 10, skip: 0 });
 
   async function getAuthToken() {
     const token = await getToken();
@@ -34,11 +38,50 @@ const FeedContainer = (props: Props) => {
     getAuthToken();
   }, []);
 
+  async function fetchNextPosts() {
+    const nextPage = {
+      limit: pagination.limit + 10,
+      skip: pagination.skip + 10,
+    };
+    const res = await getFeed(nextPage);
+    setPagination(nextPage);
+
+    const nextPosts = [...posts, ...res.posts];
+
+    setPosts(nextPosts);
+    console.log(nextPosts);
+  }
+
+  useEffect(() => {
+    const scrollAreaScrollable = document.querySelector(
+      ".scrollArea > div"
+    ) as HTMLDivElement;
+
+    const onScroll = () => {
+      if (scrollAreaScrollable) {
+        const { scrollTop, scrollHeight, clientHeight } = scrollAreaScrollable;
+        const isNearBottom = scrollTop + clientHeight >= scrollHeight;
+
+        if (isNearBottom) {
+          fetchNextPosts();
+          console.log("Reached bottom");
+          // DO SOMETHING HERE
+        }
+      }
+    };
+
+    scrollAreaScrollable.addEventListener("scroll", onScroll);
+
+    return () => {
+      scrollAreaScrollable.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
   return (
-    <ScrollArea className="h-full w-full rounded-md">
+    <ScrollArea className="h-full w-full rounded-md scrollArea">
       <div className="h-full w-full flex flex-col items-center justify-center">
         {loggedInUserId.userID !== "" &&
-          props.data.posts.map((item: { _id: string }) => {
+          posts.map((item: { _id: string }) => {
             return (
               <Post
                 key={item._id}
