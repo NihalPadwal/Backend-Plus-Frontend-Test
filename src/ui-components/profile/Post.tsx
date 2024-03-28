@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -39,10 +39,12 @@ type Props = {
   };
 };
 
-const img = "https://media.graphassets.com/fyKG82MzTbOjaLmi6Nf8";
-
 const Post = (props: Props) => {
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean>(
+    props.data?.likedBy.some(
+      (item: string) => item === props.loggedInUserId.userID
+    )
+  );
   const [likes, setLikes] = useState(props.data.likeCount);
   const [user, setUser] = useState<{
     username: string;
@@ -51,12 +53,15 @@ const Post = (props: Props) => {
   }>(props.data.userID);
   const [loading, setLoading] = useState<boolean>(false);
   const [comments, setComment] = useState<COMMENTS_TYPES[] | undefined>();
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   // to abort create post requests
   const commentsSignal = new AbortController();
 
-  const likePost = async () => {
+  async function likePost() {
+    setLoading(true);
     setIsLiked(!isLiked);
+
     setLikes((prev: number) => {
       if (!isLiked) {
         return prev + 1;
@@ -64,7 +69,30 @@ const Post = (props: Props) => {
 
       return 0;
     });
-  };
+
+    const resToken = await fetch("/api/getcookie");
+
+    if (!resToken.ok) {
+      throw Error("No token found");
+    }
+
+    const tokenData = await resToken.json();
+    const token = tokenData.token.value;
+
+    await fetch(`${process.env.NEXT_PUBLIC_API}/api/likePost`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        id: props._id,
+        likedById: props.loggedInUserId.userID,
+      }),
+    });
+
+    setLoading(false);
+  }
 
   // function to get comments
   async function getComments({ id }: { id: string }) {
@@ -161,13 +189,24 @@ const Post = (props: Props) => {
         </div>
       </Link>
 
-      <Image
-        src={props.data.contentUrl}
-        alt="Photo by Drew Beamer"
-        height={1000}
-        width={1000}
-        className="rounded-md aspect-[16/9] object-contain h-full my-5"
-      />
+      <div className="relative">
+        <div
+          className={`${
+            !imgLoaded && "opacity-0"
+          } transition-all ease-in-out duration-75`}
+        >
+          <Image
+            src={props.data.contentUrl}
+            alt="Photo by Drew Beamer"
+            height={1000}
+            width={1000}
+            className="rounded-md aspect-[16/9] object-contain h-full my-5"
+            onLoad={() => {
+              setImgLoaded(true);
+            }}
+          />
+        </div>
+      </div>
       <div className="w-max">
         <button
           className="cursor-pointer flex items-center gap-1"

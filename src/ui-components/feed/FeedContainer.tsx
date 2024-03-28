@@ -37,16 +37,17 @@ const FeedContainer = (props: Props) => {
   return (
     <ScrollArea className="h-full w-full rounded-md">
       <div className="h-full w-full flex flex-col items-center justify-center">
-        {props.data.posts.map((item: { _id: string }) => {
-          return (
-            <Post
-              key={item._id}
-              _id={item._id}
-              data={item}
-              loggedInUserId={loggedInUserId}
-            />
-          );
-        })}
+        {loggedInUserId.userID !== "" &&
+          props.data.posts.map((item: { _id: string }) => {
+            return (
+              <Post
+                key={item._id}
+                _id={item._id}
+                data={item}
+                loggedInUserId={loggedInUserId}
+              />
+            );
+          })}
       </div>
     </ScrollArea>
   );
